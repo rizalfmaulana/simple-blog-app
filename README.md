@@ -2,6 +2,29 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## JSON Placeholder API
+
+In this Project use API from [JSON Placeholder](https://jsonplaceholder.typicode.com/)
+also use JSON Server and create own database
+
+## Install JSON server
+
+```
+npm install -g json-server
+```
+
+## Start JSON Server
+
+```
+json-server --watch db.json
+```
+
+or alternative port
+
+```
+json-server --watch db.json --port 3004
+```
+
 ## Available Scripts
 
 In the project directory, you can run:
