@@ -1,8 +1,8 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
-import Post from "./Post";
+import React, { useState } from "react";
+import { connect } from "react-redux";
 
-function Blog() {
+function Blog(props) {
   const [post, setPost] = useState({
     userId: 1,
     id: 1,
@@ -10,17 +10,11 @@ function Blog() {
     body: "",
   });
 
-  const [pos, setPos] = useState([]);
-
-  const fetchAPI = () => {
-    axios.get("http://localhost:3004/posts").then((res) => {
-      setPos(res.data);
+  const postAPI = () => {
+    axios.post("http://localhost:3004/posts", post).then((res) => {
+      setPost({ ...post, title: "", body: "" });
     });
   };
-
-  useEffect(() => {
-    fetchAPI();
-  }, []);
 
   const handleInput = (event) => {
     const { name, value } = event.target;
@@ -32,16 +26,8 @@ function Blog() {
     console.log(post);
   };
 
-  const handleDelete = (data) => {
-    axios.delete(`http://localhost:3004/posts/${data}`).then((res) => {
-      fetchAPI();
-    });
-  };
-
   const handlePost = () => {
-    setPos((prevValue) => {
-      return [...prevValue, post];
-    });
+    postAPI();
   };
   return (
     <div className="blog-page">
@@ -50,24 +36,32 @@ function Blog() {
         <input
           value={post.title}
           name="title"
-          placeholder="title"
+          placeholder="Title"
           onChange={handleInput}
         />
         <textarea
           value={post.body}
           name="body"
-          placeholder="content"
+          placeholder="Content..."
+          rows="10"
           onChange={handleInput}
         />
         <button onClick={handlePost}>Save</button>
-      </div>
-      <div className="blogs">
-        {pos.map((item) => {
-          return <Post key={item.id} {...item} handleDelete={handleDelete} />;
-        })}
       </div>
     </div>
   );
 }
 
-export default Blog;
+const mapStateToProps = (state) => {
+  return {
+    blog: state.blog,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onBlog: (value) => dispatch({ type: "POST", value: value }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Blog);
